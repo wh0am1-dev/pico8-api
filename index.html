@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="img/icon.png" rel="icon">
+    <title>pico-8 api</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" media="screen" title="bootstrap" charset="utf-8">
+    <link rel="stylesheet" href="css/highlight/monokai.css">
+    <style type="text/css">
+      .nav-pills > li > a {
+        border-radius: 4px 4px 0 0;
+      }
+      .tab-content {
+        color: white;
+        background-color: #337ab7;
+        padding: 15px 15px 5px 15px;
+      }
+      div.tab-pane ul {
+        padding-left: 1.7rem;
+        padding-bottom: 1.7rem;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!--
+      [ TOC ]
+      =======
+
+      0x00. HEADER
+      0x01. NAVBAR
+      0x02. HOME
+      0x03. AUDIO
+      0x04. CART DATA
+      0x05. COROUTINES
+      0x06. GRAPHICS
+      0x07. INPUT
+      0x08. MAP
+      0x09. MATH
+      0x0A. MEMORY
+      0x0B. PEEK / POKE
+      0x0C. PICO-8
+      0x0D. STRINGS
+      0x0E. TABLES
+      0x0F. KEYS
+        0x00. KEYS_0
+        0x01. KEYS_1
+        0x02. KEYS_2
+        0x03. KEYS_3
+
+    -->
+
+    <div id="content" class="container">
+      <!-- HEADER -->
+      <div class="page-header">
+        <h1>pico-8 api cheatsheet</h1>
+      </div>
+
+      <!-- NAVBAR -->
+      <ul class="nav nav-pills">
+        <!-- class="active" in li -->
+        <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab"><img src="img/icon.png" height="12em" alt="Welcome"></a></li>
+        <li role="presentation"><a href="#audio" aria-controls="audio" role="tab" data-toggle="tab">audio</a></li>
+        <li role="presentation"><a href="#cartdata" aria-controls="data" role="tab" data-toggle="tab">cart data</a></li>
+        <li role="presentation"><a href="#coroutines" aria-controls="coroutines" role="tab" data-toggle="tab">coroutines</a></li>
+        <li role="presentation"><a href="#graphics" aria-controls="graphics" role="tab" data-toggle="tab">graphics</a></li>
+        <li role="presentation"><a href="#input" aria-controls="input" role="tab" data-toggle="tab">input</a></li>
+        <li role="presentation"><a href="#map" aria-controls="map" role="tab" data-toggle="tab">map</a></li>
+        <li role="presentation"><a href="#math" aria-controls="math" role="tab" data-toggle="tab">math</a></li>
+        <li role="presentation"><a href="#memory" aria-controls="memory" role="tab" data-toggle="tab">memory</a></li>
+        <li role="presentation"><a href="#peekpoke" aria-controls="peekpoke" role="tab" data-toggle="tab">peek / poke</a></li>
+        <li role="presentation"><a href="#pico8" aria-controls="picocli" role="tab" data-toggle="tab">pico-8</a></li>
+        <li role="presentation"><a href="#strings" aria-controls="strings" role="tab" data-toggle="tab">strings</a></li>
+        <li role="presentation"><a href="#tables" aria-controls="tables" role="tab" data-toggle="tab">tables</a></li>
+        <li role="presentation"><a href="#keys" aria-controls="keys" role="tab" data-toggle="tab">[ keys ]</a></li>
+      </ul>
+
+      <div class="tab-content clearfix">
+        <!-- HOME -->
+        <div role="tabpanel" class="tab-pane active" id="home">
+          <pre><code class="bash"># version 0.1.8
+
+pico-8 [switches] [filename.p8] # run pico-8 from the system cli
+
+-run # boot filename.p8 on startup
+-width n # set the window or screen width and adjust scale to fit if not specified
+-height n # set the window or screen height and adjust scale to fit if not specified
+-scale n # set the size of each pico-8 pixel. "-scale 3" gives pixels rendered at 3x3
+-windowed n # set windowed mode off (0) or on (1)
+-sound n # sound volume 0..256
+-music n # sound volume 0..256
+-joystick n # joystick controls starts at player n (0..7)
+-aspect n # set the aspect ratio. 420 means 1:1 (default), 560 for 4:3, 525 for 5:4 etc.
+-splore # boot in splore mode
+-home path # customise data directory
+-gif_len n # set the maximum gif length in seconds (1..120)</code></pre>
+          <pre><code class="markdown"># specs
+
+- display: 128x128, fixed 16 colour palette
+- input: 6 buttons
+- cartridge size: 32k
+- sound: 4 channel, 64 definable chip blerps
+- code: lua, max 8192 tokens of code
+- sprites: single bank of 128 8x8 sprites + 128 shared
+- map: 128x32 8-bit cels + 128x32 shared</code></pre>
+        </div>
+
+        <!-- AUDIO -->
+        <div role="tabpanel" class="tab-pane fade" id="audio">
+          <p><center><img src="img/keyboard.png" alt="" class="img-responsive"></center></p>
+          <pre><code class="lua">music([n, [fade_len, [channel_mask]]]) -- play music, -1: stop
+sfx(n, [channel, [offset]]) -- play sfx, -1: stop in channel, -2: release loop in channel</code></pre>
+        </div>
+
+        <!-- CART DATA -->
+        <div role="tabpanel" class="tab-pane fade" id="cartdata">
+          <pre><code class="lua">cartdata(id) -- open cart data named id (once per execution!)
+dget(idx) -- get number at index
+dset(idx, val) -- set number at index to value</code></pre>
+        </div>
+
+        <!-- COROUTINES -->
+        <div role="tabpanel" class="tab-pane fade" id="coroutines">
+          <pre><code class="lua">cocreate(f) -- returns a coroutine that executes f
+coresume(c) -- resume coroutine c execution
+costatus(c) -- returns true if c is still executing, false otherwise
+yield() -- use inside a coroutine; makes a coroutine pause execution until next resume</code></pre>
+          <p><center><a href="http://www.lexaloffle.com/bbs/?tid=3458" target="_blank" style="color: white;">view coroutines thread</a></center></p>
+        </div>
+
+        <!-- GRAPHICS -->
+        <div role="tabpanel" class="tab-pane fade" id="graphics">
+          <p><center><img src="img/colors.png" alt="" class="img-responsive"></center></p>
+          <pre><code class="lua">camera([x, y]) -- set camera position
+circ(x, y, r, [col]) -- draw circle
+circfill(x, y, r, [col]) -- draw filled circle
+clip([x, y, w, h]) -- set screen clipping region
+cls() -- clear screen
+color(col) -- set default color
+cursor(x, y) -- set cursor and CR/LF margin position
+fget(n, [f]) -- get values of sprite flags
+flip() -- flip screen back buffer
+fset(n, [f], v) -- set values of sprite flags
+line(x0, y0, x1, y1, [col]) -- draw line
+pal(c0, c1, [p]) -- switch colour 0 to colour 1; p = 0 = draw palette; p = 1 = screen palette
+palt(col, t) -- set transparency for colour to t (bool)
+pget(x, y) -- get pixel colour
+print(str, [x, y, [col]]) -- print string
+pset(x, y, [col]) -- set pixel colour
+rect(x0, y0, x1, y1, [col]) -- draw rectangle
+rectfill(x0, y0, x1, y1, [col]) -- draw filled rectangle
+sget(x, y) -- get spritesheet pixel colour
+spr(n, x, y, [w, h], [flip_x], [flip_y]) -- draw sprite
+sset(x, y, [col]) -- set spritesheet pixel colour
+sspr(sx, sy, sw, sh, dx, dy, [dw, dh], [flip_x], [flip_y]) -- draw texture from spritesheet</code></pre>
+        </div>
+
+        <!-- INPUT -->
+        <div role="tabpanel" class="tab-pane fade" id="input">
+          <p><center><img src="img/input.png" alt="" class="img-responsive"></center></p>
+          <pre><code class="lua">btn([i, [p]]) -- get button i state for player p
+btnp([i, [p]]) -- only true when the button was not pressed the last frame. repeats every 4 frames after button held for 15 frames</code></pre>
+        </div>
+
+        <!-- MAP -->
+        <div role="tabpanel" class="tab-pane fade" id="map">
+          <pre><code class="lua">map(cel_x, cel_y, sx, sy, cel_w, cel_h, [layer]) -- draw map, layers from flags, sprite 0 is empty
+mapdraw(cel_x, cel_y, sx, sy, cel_w, cel_h, [layer]) -- same as 'map()', draw map
+mget(x, y) -- get map value
+mset(x, y, v) -- set map value</code></pre>
+        </div>
+
+        <!-- MATH -->
+        <div role="tabpanel" class="tab-pane fade" id="math">
+          <pre><code class="lua">-32768.0 .. 32767.99 -- numeric representation range
+abs(x) -- x absolute value
+atan2(dx, dy) -- convert (dx, dy) to an angle in [0..1]
+band(x, y) -- bitwise conjunction
+bnot(x) -- bitwise negation
+bor(x, y) -- bitwise disjunction
+bxor(x, y) -- bitwise exclusive disjunction
+cos(x) -- x cosine, [0..1]
+flr(x) -- round down
+-flr(-x) -- not a function per se, but will work as ceil(x)
+max(x, y) -- x/y maximum
+mid(x, y, z) -- x/y/z middle value
+min(x, y) -- x/y minimum
+rnd(x) -- random, 0 &lt;= n &lt; x
+sgn(x) -- returns argument sign: -1, 1; sgn(0) = 1;
+shl(x, y) -- shift left
+shr(x, y) -- shift right
+sin(x) -- x sine, [0..1], inverted
+sqrt(x) -- x square root
+srand(x) -- set random seed</code></pre>
+          <!--<pre><code class="lua">- operators
++ - sum
+- - sub
+* - mul
+/ - div
+% - mod
+^ - pow
++= - sum to
+-= - sub to
+*= - mul to
+/= - div to
+%= - mod to
+^= - pow to
+== - compare equals
+~= - compare not equals
+!= - compare not equals
+&gt; - compare greater than
+&lt; - compare less than
+&gt;= - compare greater than or equals
+&lt;= - compare less than or equals
+not - boolean negation
+and - boolean conjunction
+or - boolean disjunction
+() - operation delimiters</code></pre>
+          <pre><code class="lua">- logical blocks
+if &lt;condition&gt; then
+ - code block
+elseif &lt;condition&gt; then
+ - code block
+else
+ - code block
+end
+
+while &lt;condition&gt; do
+ - code block
+end
+
+for &lt;var&gt; = &lt;first&gt;, &lt;last&gt;, &lt;step&gt; do
+ - code block
+end</code></pre>-->
+        </div>
+
+        <!-- MEMORY -->
+        <div role="tabpanel" class="tab-pane fade" id="memory">
+          <pre><code class="lua">cstore(dest_addr, src_addr, len, [filename]) -- copy bytes from ram to rom [load from filename]
+memcpy(dest_addr, src_addr, len) -- copy bytes
+memset(dest_addr, val, len) -- set len bytes to val
+peek(addr) -- read byte in ram address
+poke(addr, val) -- write val in ram address
+reload(dest_addr, src_addr, len, [filename]) -- copy bytes from rom to ram [load from filename]</code></pre>
+          <pre><code class="markdown"># types:
+
+1. base ram (32kB)
+2. cart rom
+3. lua ram (1MB)</code></pre>
+          <pre><code class="markdown"># ram layout:
+
+0x0    - gfx
+0x1000 - gfx2/map2 (shared)
+0x2000 - map
+0x3000 - gfx_props
+0x3100 - song
+0x3200 - sfx
+0x4300 - user data
+0x5e00 - persistent cart data (256 bytes)
+0x5f00 - draw state
+0x5f40 - hardware state
+0x5f80 - gpio pins (128 bytes) // in development
+0x6000 - screen (8k)</code></pre>
+        </div>
+
+        <!-- PEEK / POKE -->
+        <div role="tabpanel" class="tab-pane fade" id="peekpoke">
+          <pre><code class="lua">-- mouse
+poke(0x5f2d, 1) -- initiate mouse listener
+stat(32) -- read x coord
+stat(33) -- read y coord
+stat(34) -- read button bitmask (1 = primary, 2 = secondary, 4 = middle)</code></pre>
+          <pre><code class="lua">-- extra graphics modes
+poke(0x5f2c, 0) -- standard, 128x128
+poke(0x5f2c, 1) -- horizontal stretch, 64x128
+poke(0x5f2c, 2) -- vertical stretch, 128x64
+poke(0x5f2c, 3) -- zoomed, 64x64
+poke(0x5f2c, 4) -- standard, 128x128
+poke(0x5f2c, 5) -- mirror left half
+poke(0x5f2c, 6) -- mirror top half
+poke(0x5f2c, 7) -- mirror top-left quarter</code></pre>
+        </div>
+
+        <!-- PICO-8 -->
+        <div role="tabpanel" class="tab-pane fade" id="pico8">
+          <pre><code class="lua">-- exec flow
+_update() -- called once per update at 30fps
+_update60() -- called once per update at 60fps
+_draw() -- called once per visible frame
+_init() -- called once on program startup
+holdframe() -- used automatically by _draw(), _update()</code></pre>
+          <pre><code class="lua">-- cli
+assert(condition) -- verify that condition is true
+cd .. -- change to parent directory
+cd [dirname] -- change directory
+dir() -- list items
+exit() -- close pico-8 app
+export(filename.html) -- export game in html / js
+export(filename.png) -- export spritesheet
+export(filename.wav) -- export the current sfx / music
+export(filename%d.wav) -- export all sfx as numbered files
+folder() -- open carts folder in operating system
+help() -- show summary of system commands
+import(filename.png) -- import spritesheet. expects 128x128 png and colour-fits to the pico-8 palette
+info() -- print cart info
+install_demos() -- install demo p8 carts alongside pico-8 app
+install_games() -- install selection of bbs carts
+keyconfig() -- keyboard configuration for player buttons
+load(filename) -- load cart
+ls() -- list items
+menuitem(index, [label, callback]) -- add an extra item to the pause menu; index = 1..5; no label or callback removes the item
+mkdir(dirname) -- create directory
+printh(str) -- print string to terminal
+reboot() -- reboot pico8
+resume() -- resume cart execution
+run() -- boot cart
+save(filename) -- save cart
+shutdown() -- close pico-8 app
+splore() -- explore cartridges
+stat(x) -- 0 = mem; 1 = cpu;
+time() -- returns seconds since last reboot
+type(v) -- returns type of v: number, string or table</code></pre>
+          <pre><code class="javascript">// javascript
+pico8_gpio[] // read and write gpio pins</code></pre>
+        </div>
+
+        <!-- STRINGS -->
+        <div role="tabpanel" class="tab-pane fade" id="strings">
+          <pre><code class="lua">#s -- string length
+"three "..4 -- string concatenation
+sub(str, from, [to]) -- substring</code></pre>
+        </div>
+
+        <!-- TABLES -->
+        <div role="tabpanel" class="tab-pane fade" id="tables">
+          <pre><code class="lua">-- tables
+add(t, v) -- add v to t
+all(t) -- used in 'for v in all(t)' loops
+count(t) -- returns number of elements in the table
+del(t, v) -- delete first instance of v in t
+foreach(t, f) -- call f() for each v in t
+pairs(t) -- used in 'for k,v in pairs(t)' loops</code></pre>
+          <pre><code class="lua">-- metatables
+setmetatable(t, mt) -- set metatable mt to table t</code></pre>
+          <p><center><a href="http://www.lexaloffle.com/bbs/?tid=3342" target="_blank" style="color: white;">view metatables thread</a></center></p>
+        </div>
+
+        <!-- KEYS -->
+        <div role="tabpanel" class="tab-pane fade" id="keys">
+          <div class="row">
+            <!-- KEYS_0 -->
+            <div class="col-md-3">
+              <h6>general</h6>
+              <ul>
+                <li><strong>fullscreen</strong>: alt + enter / cmd + f</li>
+                <li><strong>quit</strong>: alt + f4 / cmd + q</li>
+                <li><strong>reload and run</strong>: ctrl + r</li>
+                <li><strong>save</strong>: ctrl + s</li>
+                <li><strong>screenshot</strong>: f6 / f1</li>
+                <li><strong>cart img</strong>: f7 / f2</li>
+                <li><strong>start video</strong>: f8 / f3</li>
+                <li><strong>save video</strong>: f9 / f4</li>
+                <li><strong>navigate editors</strong>: alt + right, left</li>
+                <li><strong>cli completion</strong>: tab</li>
+              </ul>
+              <h6>whilst running</h6>
+              <ul>
+                <li><strong>pause menu</strong>: p / enter</li>
+              </ul>
+            </div>
+
+            <!-- KEYS_1 -->
+            <div class="col-md-3">
+              <h6>code editor</h6>
+              <ul>
+                <li><strong>select</strong>: shift</li>
+                <li><strong>cut</strong>: ctrl + x</li>
+                <li><strong>copy</strong>: ctrl + c</li>
+                <li><strong>paste</strong>: ctrl + v</li>
+                <li><strong>undo</strong>: ctrl + z</li>
+                <li><strong>redo</strong>: ctrl + y</li>
+                <li><strong>duplicate line</strong>: ctrl + d</li>
+                <li><strong>search</strong>: ctrl + f</li>
+                <li><strong>repeat search</strong>: ctrl + g</li>
+                <li><strong>navigate functions</strong>: alt + up, down</li>
+                <li><strong>button glyphs</strong>: shift + l, r, u, d, x, o</li>
+              </ul>
+              <h6>splore</h6>
+              <ul>
+                <li><strong>navigate lists</strong>: left / right</li>
+                <li><strong>navigate carts</strong>: up / down</li>
+                <li><strong>launch cart</strong>: x / o / menu</li>
+                <li><strong>favourite cart</strong>: f</li>
+              </ul>
+            </div>
+
+            <!-- KEYS_2 -->
+            <div class="col-md-3">
+              <h6>sprite / map editor</h6>
+              <ul>
+                <li><strong>undo</strong>: ctrl + z</li>
+                <li><strong>copy</strong>: ctrl + c</li>
+                <li><strong>paste</strong>: ctrl + v</li>
+                <li><strong>pan</strong>: space / mmb</li>
+                <li><strong>navigate sprites</strong>: q / w</li>
+                <li><strong>navigate colours</strong>: 1 / 2</li>
+                <li><strong>navigate tabs</strong>: + / -</li>
+                <li><strong>fullscreen</strong>: tab</li>
+                <li><strong>zoom</strong>: mousewheel</li>
+                <li><strong>flip y</strong>: f</li>
+                <li><strong>flip x</strong>: v</li>
+                <li><strong>rotate</strong>: r</li>
+                <li><strong>move</strong>: cursors</li>
+                <li>
+                  <strong>draw tool</strong>:
+                  <ul>
+                    <li><strong>replace colour</strong>: lctrl</li>
+                    <li><strong>eyedropper</strong>: rmb</li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>stamp tool</strong>:
+                  <ul>
+                    <li><strong>stamp w/ transparency</strong>: lctrl</li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>select tool</strong>:
+                  <ul>
+                    <li><strong>select sprites</strong>: shift + drag</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+
+            <!-- KEYS_3 -->
+            <div class="col-md-3">
+              <h6>sfx / music editor</h6>
+              <ul>
+                <li><strong>play / pause</strong>: space</li>
+                <li><strong>copy</strong>: ctrl + c</li>
+                <li><strong>paste</strong>: ctrl + v</li>
+                <li><strong>set all notes</strong>: shift + lmb</li>
+                <li><strong>modify speed</strong>: &lt; / &gt;</li>
+                <li><strong>navigate</strong>: home, end, pageup/down, mousewheel</li>
+                <li><strong>navigate patterns</strong>: + / -</li>
+                <li><strong>snap to Cm pentatonic</strong>: ctrl</li>
+                <li><strong>speed x4</strong>: shift</li>
+                <li><strong>release loop</strong>: a</li>
+                <li><strong>delete</strong>: backspace</li>
+                <li>
+                  <strong>effects</strong>:
+                  <ul>
+                    <li><strong>0</strong>: none</li>
+                    <li><strong>1</strong>: slide</li>
+                    <li><strong>2</strong>: vibrato</li>
+                    <li><strong>3</strong>: drop (drum kick!)</li>
+                    <li><strong>4</strong>: fade in</li>
+                    <li><strong>5</strong>: fade out</li>
+                    <li><strong>6</strong>: fast arpeggio (4 notes)</li>
+                    <li><strong>7</strong>: slow arpeggio (4 notes)</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+      </div>
+    </div>
+
+    <script src="js/jquery.min.js" charset="utf-8"></script>
+    <script src="js/bootstrap.min.js" charset="utf-8"></script>
+    <script src="js/highlight.default.lua.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>
