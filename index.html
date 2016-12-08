@@ -86,15 +86,22 @@ pico-8 [switches] [filename.p8] # run pico-8 from the system cli
 -run # boot filename.p8 on startup
 -width n # set the window or screen width and adjust scale to fit if not specified
 -height n # set the window or screen height and adjust scale to fit if not specified
--scale n # set the size of each pico-8 pixel. "-scale 3" gives pixels rendered at 3x3
--windowed n # set windowed mode off (0) or on (1)
--sound n # sound volume 0..256
--music n # sound volume 0..256
--joystick n # joystick controls starts at player n (0..7)
--aspect n # set the aspect ratio. 420 means 1:1 (default), 560 for 4:3, 525 for 5:4 etc.
+-windowed b # set windowed mode off (0) or on (1)
+-sound n # sound volume [0..256]
+-music n # sound volume [0..256]
+-joystick n # joystick controls starts at player n [0..7]
+-pixel_perfect b # set filter for screen stretching off (0) or on (1)
+-draw_rect x,y,w,h # window coordinates and size
 -splore # boot in splore mode
--home path # customise data directory
--gif_len n # set the maximum gif length in seconds (1..120)</code></pre>
+-home path # customise home directory
+-desktop path # set desktop path for screenshots and gifs
+-screenshot_scale n # size of each screenshot pixel; default = 3
+-gif_scale n # size of each gif pixel; default = 2
+-gif_len n # set the maximum gif length in seconds; n in [1..120]
+-gui_theme n # set the code editor theme; 0 = classic, 1 = dark blue
+-timeout n # timeout switch for splore downloads
+-frameless b # set borderless window off (0) or on (1)
+-show_fps b # set fps display off (0) or on (1)</code></pre>
           <pre><code class="markdown"># specs
 
 - display: 128x128, fixed 16 colour palette
@@ -109,8 +116,8 @@ pico-8 [switches] [filename.p8] # run pico-8 from the system cli
         <!-- AUDIO -->
         <div role="tabpanel" class="tab-pane fade" id="audio">
           <p><center><img src="img/keyboard.png" alt="" class="img-responsive"></center></p>
-          <pre><code class="lua">music([n, [fade_len, [channel_mask]]]) -- play music, -1: stop
-sfx(n, [channel, [offset]]) -- play sfx, -1: stop in channel, -2: release loop in channel</code></pre>
+          <pre><code class="lua">music([n, [fade_len, [channel_mask]]]) -- play music; n = -1: stop
+sfx(n, [channel, [offset]]) -- play sfx; n = -1: stop in channel; n = -2: release loop in channel</code></pre>
         </div>
 
         <!-- CART DATA -->
@@ -140,7 +147,7 @@ cls() -- clear screen
 color(col) -- set default color
 cursor(x, y) -- set cursor and CR/LF margin position
 fget(n, [f]) -- get values of sprite flags
-flip() -- flip screen back buffer
+flip() -- flip screen back buffer (30fps)
 fset(n, [f], v) -- set values of sprite flags
 line(x0, y0, x1, y1, [col]) -- draw line
 pal(c0, c1, [p]) -- switch colour 0 to colour 1; p = 0 = draw palette; p = 1 = screen palette
@@ -160,13 +167,13 @@ sspr(sx, sy, sw, sh, dx, dy, [dw, dh], [flip_x], [flip_y]) -- draw texture from 
         <div role="tabpanel" class="tab-pane fade" id="input">
           <p><center><img src="img/input.png" alt="" class="img-responsive"></center></p>
           <pre><code class="lua">btn([i, [p]]) -- get button i state for player p
-btnp([i, [p]]) -- only true when the button was not pressed the last frame. repeats every 4 frames after button held for 15 frames</code></pre>
+btnp([i, [p]]) -- only true when the button was not pressed the last frame; repeats every 4 frames after button held for 15 frames</code></pre>
         </div>
 
         <!-- MAP -->
         <div role="tabpanel" class="tab-pane fade" id="map">
-          <pre><code class="lua">map(cel_x, cel_y, sx, sy, cel_w, cel_h, [layer]) -- draw map, layers from flags, sprite 0 is empty
-mapdraw(cel_x, cel_y, sx, sy, cel_w, cel_h, [layer]) -- same as 'map()', draw map
+          <pre><code class="lua">map(cel_x, cel_y, sx, sy, cel_w, cel_h, [layer]) -- draw map; layers from flags; sprite 0 is empty
+mapdraw(cel_x, cel_y, sx, sy, cel_w, cel_h, [layer]) -- same as 'map()'; draw map
 mget(x, y) -- get map value
 mset(x, y, v) -- set map value</code></pre>
         </div>
@@ -186,11 +193,11 @@ flr(x) -- round down
 max(x, y) -- x/y maximum
 mid(x, y, z) -- x/y/z middle value
 min(x, y) -- x/y minimum
-rnd(x) -- random, 0 &lt;= n &lt; x
-sgn(x) -- returns argument sign: -1, 1; sgn(0) = 1;
+rnd(x) -- random; 0 &lt;= n &lt; x
+sgn(x) -- returns argument sign: -1 or 1; sgn(0) = 1
 shl(x, y) -- shift left
 shr(x, y) -- shift right
-sin(x) -- x sine, [0..1], inverted
+sin(x) -- x sine, [0..1]; inverted
 sqrt(x) -- x square root
 srand(x) -- set random seed</code></pre>
           <!--<pre><code class="lua">- operators
@@ -237,12 +244,12 @@ end</code></pre>-->
 
         <!-- MEMORY -->
         <div role="tabpanel" class="tab-pane fade" id="memory">
-          <pre><code class="lua">cstore(dest_addr, src_addr, len, [filename]) -- copy bytes from ram to rom [load from filename]
+          <pre><code class="lua">cstore(dest_addr, src_addr, len, [filename]) -- copy bytes from ram to rom [load from filename; works with multi-cart export]
 memcpy(dest_addr, src_addr, len) -- copy bytes
 memset(dest_addr, val, len) -- set len bytes to val
 peek(addr) -- read byte in ram address
 poke(addr, val) -- write val in ram address
-reload(dest_addr, src_addr, len, [filename]) -- copy bytes from rom to ram [load from filename]</code></pre>
+reload(dest_addr, src_addr, len, [filename]) -- copy bytes from rom to ram [load from filename; works with multi-cart export]</code></pre>
           <pre><code class="markdown"># types:
 
 1. base ram (32kB)
@@ -270,7 +277,7 @@ reload(dest_addr, src_addr, len, [filename]) -- copy bytes from rom to ram [load
 poke(0x5f2d, 1) -- initiate mouse listener
 stat(32) -- read x coord
 stat(33) -- read y coord
-stat(34) -- read button bitmask (1 = primary, 2 = secondary, 4 = middle)</code></pre>
+stat(34) -- read button bitmask; 1 = primary, 2 = secondary, 4 = middle</code></pre>
           <pre><code class="lua">-- extra graphics modes
 poke(0x5f2c, 0) -- standard, 128x128
 poke(0x5f2c, 1) -- horizontal stretch, 64x128
@@ -280,26 +287,32 @@ poke(0x5f2c, 4) -- standard, 128x128
 poke(0x5f2c, 5) -- mirror left half
 poke(0x5f2c, 6) -- mirror top half
 poke(0x5f2c, 7) -- mirror top-left quarter</code></pre>
+          <pre><code class="lua">-- raspberry pi / pocketchip gpio
+-- run pico-8 as root ("sudo pico-8")
+-- values in [0..255]
+poke(0x5f80, val) -- send val to gpio0
+poke(0x5f81, val) -- send val to gpio1
+-- et cetera</code></pre>
         </div>
 
         <!-- PICO-8 -->
         <div role="tabpanel" class="tab-pane fade" id="pico8">
           <pre><code class="lua">-- exec flow
-_update() -- called once per update at 30fps
-_update60() -- called once per update at 60fps
 _draw() -- called once per visible frame
 _init() -- called once on program startup
-holdframe() -- used automatically by _draw(), _update()</code></pre>
+_update() -- called once per update at 30fps
+_update60() -- called once per update at 60fps</code></pre>
           <pre><code class="lua">-- cli
 assert(condition) -- verify that condition is true
 cd .. -- change to parent directory
 cd [dirname] -- change directory
 dir() -- list items
 exit() -- close pico-8 app
-export(filename.html) -- export game in html / js
+export(filename.html, [cart1.p8, cart2.p8 ... cart15]) -- export game in html; up to 15 extra carts (.p8 format)
 export(filename.png) -- export spritesheet
 export(filename.wav) -- export the current sfx / music
 export(filename%d.wav) -- export all sfx as numbered files
+extcmd(cmd) -- control screenshots; "label" = cart label; "screen" = screenshot; "rec" = start gif; "video" = save gif
 folder() -- open carts folder in operating system
 help() -- show summary of system commands
 import(filename.png) -- import spritesheet. expects 128x128 png and colour-fits to the pico-8 palette
@@ -307,22 +320,41 @@ info() -- print cart info
 install_demos() -- install demo p8 carts alongside pico-8 app
 install_games() -- install selection of bbs carts
 keyconfig() -- keyboard configuration for player buttons
-load(filename) -- load cart
+load("@clip") -- paste cart from clipboard, bbs support
+load(filename) -- load cart; works with multi-cart export
 ls() -- list items
-menuitem(index, [label, callback]) -- add an extra item to the pause menu; index = 1..5; no label or callback removes the item
+menuitem(index, [label, callback]) -- add an extra item to the pause menu; index in [1..5]; no label or callback removes the item
 mkdir(dirname) -- create directory
-printh(str) -- print string to terminal
+printh(str, [filename, overwrite]) -- print str to terminal; append or overwrite to filename
 reboot() -- reboot pico8
 resume() -- resume cart execution
 run() -- boot cart
+save("@clip") -- copy cart to clipboard, bbs support
 save(filename) -- save cart
 shutdown() -- close pico-8 app
 splore() -- explore cartridges
-stat(x) -- 0 = mem; 1 = cpu;
+stat(x) -- read some execution values, read below
 time() -- returns seconds since last reboot
 type(v) -- returns type of v: number, string or table</code></pre>
+          <pre><code class="lua">-- stats
+stat(0) -- memory usage in [0..1024]
+stat(1) -- cpu usage; 1.0 == 100% cpu at 30fps
+stat(4) -- clipboard; after user pressed ctrl-v
+stat(16..19) -- index of playing sfx on channels 0..3
+stat(20..23) -- note number (0..31) on channels 0..3
+stat(32) -- mouse x coord; see "peek / poke" tab
+stat(33) -- mouse y coord; see "peek / poke" tab
+stat(34) -- mouse button bitmask; see "peek / poke" tab</code></pre>
           <pre><code class="javascript">// javascript
 pico8_gpio[] // read and write gpio pins</code></pre>
+          <pre><code class="lua">-- private functions (use carefully)
+_get_frames_skipped() -- used automatically by _mainloop()
+_get_menu_item_selected(n) -- returns true or false if the n-th menu item is selected; n in [1..5]; used automatically by _mainloop()
+_mainloop() -- main pico-8's "while true"
+_pausemenu[n].callback() -- execute the n-th menu item's callback; n in [1..5]; used automatically by _mainloop()
+_set_mainloop_exists(n) -- ?
+_update_buttons() -- used automatically by _mainloop()
+holdframe() -- used automatically by _mainloop()</code></pre>
         </div>
 
         <!-- STRINGS -->
@@ -357,17 +389,22 @@ setmetatable(t, mt) -- set metatable mt to table t</code></pre>
                 <li><strong>quit</strong>: alt + f4 / cmd + q</li>
                 <li><strong>reload and run</strong>: ctrl + r</li>
                 <li><strong>save</strong>: ctrl + s</li>
-                <li><strong>screenshot</strong>: f6 / f1</li>
-                <li><strong>cart img</strong>: f7 / f2</li>
-                <li><strong>start video</strong>: f8 / f3</li>
-                <li><strong>save video</strong>: f9 / f4</li>
+                <li><strong>mute / unmute</strong>: ctrl + m</li>
+                <li><strong>show fps</strong>: ctrl + 1</li>
+                <li><strong>screenshot</strong>: ctrl + 6 / f6 / f1</li>
+                <li><strong>cart img</strong>: ctrl + 7 / f7 / f2</li>
+                <li><strong>start video</strong>: ctrl + 8 / f8 / f3</li>
+                <li><strong>save video</strong>: ctrl + 9 / f9 / f4</li>
                 <li><strong>keyboard cursor</strong>: f10</li>
                 <li><strong>navigate editors</strong>: alt + right, left</li>
                 <li><strong>cli completion</strong>: tab</li>
               </ul>
-              <h6>whilst running</h6>
+              <h6>splore</h6>
               <ul>
-                <li><strong>pause menu</strong>: p / enter</li>
+                <li><strong>navigate lists</strong>: left / right</li>
+                <li><strong>navigate carts</strong>: up / down / home / end / pageup / pagedown</li>
+                <li><strong>launch cart</strong>: x / o / menu</li>
+                <li><strong>favourite cart</strong>: f</li>
               </ul>
             </div>
 
@@ -375,24 +412,24 @@ setmetatable(t, mt) -- set metatable mt to table t</code></pre>
             <div class="col-md-3">
               <h6>code editor</h6>
               <ul>
+                <li><strong>skip across words</strong>: ctrl + left, right</li>
                 <li><strong>select</strong>: shift</li>
+                <li><strong>select word</strong>: double click</li>
                 <li><strong>cut</strong>: ctrl + x</li>
                 <li><strong>copy</strong>: ctrl + c</li>
                 <li><strong>paste</strong>: ctrl + v</li>
                 <li><strong>undo</strong>: ctrl + z</li>
                 <li><strong>redo</strong>: ctrl + y</li>
+                <li><strong>indent</strong>: tab</li>
+                <li><strong>unindent</strong>: shift + tab</li>
                 <li><strong>duplicate line</strong>: ctrl + d</li>
                 <li><strong>search</strong>: ctrl + f</li>
                 <li><strong>repeat search</strong>: ctrl + g</li>
                 <li><strong>navigate functions</strong>: alt + up, down</li>
+                <li><strong>start / end of code</strong>: ctrl + up, down</li>
                 <li><strong>button glyphs</strong>: shift + l, r, u, d, x, o</li>
-              </ul>
-              <h6>splore</h6>
-              <ul>
-                <li><strong>navigate lists</strong>: left / right</li>
-                <li><strong>navigate carts</strong>: up / down</li>
-                <li><strong>launch cart</strong>: x / o / menu</li>
-                <li><strong>favourite cart</strong>: f</li>
+                <li><strong>icons</strong>: shift + qwetyipasfghjkzcvbnm</li>
+                <li><strong>glyph mode</strong>: ctrl + k</li>
               </ul>
             </div>
 
@@ -401,8 +438,8 @@ setmetatable(t, mt) -- set metatable mt to table t</code></pre>
               <h6>sprite / map editor</h6>
               <ul>
                 <li><strong>undo</strong>: ctrl + z</li>
-                <li><strong>copy</strong>: ctrl + c</li>
-                <li><strong>paste</strong>: ctrl + v</li>
+                <li><strong>copy (bbs support)</strong>: ctrl + c</li>
+                <li><strong>paste (bbs support)</strong>: ctrl + v</li>
                 <li><strong>pan</strong>: space / mmb</li>
                 <li><strong>navigate sprites</strong>: q / w</li>
                 <li><strong>navigate colours</strong>: 1 / 2</li>
@@ -444,7 +481,7 @@ setmetatable(t, mt) -- set metatable mt to table t</code></pre>
                 <li><strong>paste</strong>: ctrl + v</li>
                 <li><strong>set all notes</strong>: shift + lmb</li>
                 <li><strong>modify speed</strong>: &lt; / &gt;</li>
-                <li><strong>navigate</strong>: home, end, pageup/down, mousewheel</li>
+                <li><strong>navigate</strong>: home, end, pageup, pagedown, mousewheel</li>
                 <li><strong>navigate patterns</strong>: + / -</li>
                 <li><strong>snap to Cm pentatonic</strong>: ctrl</li>
                 <li><strong>speed x4</strong>: shift</li>
