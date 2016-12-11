@@ -143,7 +143,7 @@ yield() -- use inside a coroutine; makes a coroutine pause execution until next 
 circ(x, y, r, [col]) -- draw circle
 circfill(x, y, r, [col]) -- draw filled circle
 clip([x, y, w, h]) -- set screen clipping region
-cls() -- clear screen
+cls(col) -- fill entire screen with given color
 color(col) -- set default color
 cursor(x, y) -- set cursor and CR/LF margin position
 fget(n, [f]) -- get values of sprite flags
@@ -362,6 +362,9 @@ holdframe() -- used automatically by _mainloop()</code></pre>
           <pre><code class="lua">#s -- string length
 "three "..4 -- string concatenation
 sub(str, from, [to]) -- substring</code></pre>
+          <h6>special characters</h6>
+          <pre><code class="lua">print('l:\x8b r:\x91 u:\x94 d:\x83 o:\x8e x:\x97')</code></pre>
+          <p><center><img src="img/glyphs.png" alt="" class="img-responsive"></center></p>
         </div>
 
         <!-- TABLES -->
