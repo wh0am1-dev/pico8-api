@@ -403,7 +403,10 @@ holdframe() -- used automatically by _mainloop()</code></pre>
           <h6>string manipulation</h6>
           <pre><code class="lua">#s -- string length
 "three "..4 -- string concatenation
-sub(str, from, [to]) -- substring</code></pre>
+sub(str, from, [to]) -- substring
+"123.45" + 0 -- convert string to a number 
+             --   string must be parseable as a number
+             --   use "0xAF" format for hex numbers</code></pre>
 
           <h6>special characters</h6>
           <pre><code class="lua">print('l:\x8b r:\x91 u:\x94 d:\x83 o:\x8e x:\x97')</code></pre>
