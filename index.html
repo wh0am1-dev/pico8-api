@@ -377,8 +377,8 @@ type(v) -- returns type of v: number, string or table</code></pre>
           <pre><code class="lua">stat(0) -- memory usage in [0..1024]
 stat(1) -- cpu usage; 1.0 == 100% cpu at 30fps
 stat(4) -- clipboard; after user pressed ctrl-v
-stat(16..19) -- index of playing sfx on channels 0..3
-stat(20..23) -- note number (0..31) on channels 0..3
+stat([16..19]) -- index of playing sfx on channels [0..3]
+stat([20..23]) -- note number (0..31) on channels [0..3]
 stat(32) -- mouse x coord; see "peek / poke" tab
 stat(33) -- mouse y coord; see "peek / poke" tab
 stat(34) -- mouse button bitmask; see "peek / poke" tab</code></pre>
@@ -402,14 +402,12 @@ holdframe() -- used automatically by _mainloop()</code></pre>
 
           <h6>string manipulation</h6>
           <pre><code class="lua">#s -- string length
-"three "..4 -- string concatenation
+"three " .. 4 -- string concatenation
 sub(str, from, [to]) -- substring
-"123.45" + 0 -- convert string to a number 
-             --   string must be parseable as a number
-             --   use "0xAF" format for hex numbers</code></pre>
+"123.45" + 0 -- cast parseable string to number; "0xAF" format for hex</code></pre>
 
           <h6>special characters</h6>
-          <pre><code class="lua">print('l:\x8b r:\x91 u:\x94 d:\x83 o:\x8e x:\x97')</code></pre>
+          <pre><code class="lua">print("l:\x8b r:\x91 u:\x94 d:\x83 o:\x8e x:\x97")</code></pre>
         </div>
 
         <!-- TABLES -->
