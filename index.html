@@ -27,11 +27,16 @@
       .api {
         background-color: #fff;
         border-radius: 5px;
-        padding-bottom: 15px;
         margin-top: 20px;
         margin-bottom: 20px;
       }
+      .footer {
+        background-color: #fff;
+        margin-top: 20px;
+        margin-bottom: 10px;
+      }
     </style>
+    <script src="https://use.fontawesome.com/1452dd4c19.js"></script>
   </head>
   <body>
 
@@ -57,9 +62,6 @@
       0x0F. KEYS
         0x00. KEYS_0
         0x01. KEYS_1
-        0x02. KEYS_2
-        0x03. KEYS_3
-
     -->
 
     <div id="content" class="container api">
@@ -593,9 +595,19 @@ function mt.__le(a, b) return a <= b end</code></pre>
       </div>
     </div>
 
+    <div class="footer">
+      <div class="row">
+        <div class="col-md-4" style="text-align: left;">pico-8 by <a href="http://www.lexaloffle.com/" target="_blank">lexaloffle</a> <img src="img/lexaloffle.png" style="width: 25px;"></img></div>
+        <div class="col-md-4" style="text-align: center;">made with <i class="fa fa-heart text-danger"></i> by <a href="https://neko250.github.io" target="_blank">neko250</a></div>
+        <div class="col-md-4" style="text-align: right;">contribute on <a href="https://github.com/Neko250/pico8-api" target="_blank">github</a> <i class="fa fa-lg fa-code-fork text-primary"></i></div>
+      </div>
+    </div>
+
     <script src="js/jquery.min.js" charset="utf-8"></script>
     <script src="js/bootstrap.min.js" charset="utf-8"></script>
     <script src="js/highlight.default.lua.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
+
+    <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
   </body>
 </html>
