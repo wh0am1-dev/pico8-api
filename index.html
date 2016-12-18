@@ -386,7 +386,8 @@ stat(33) -- mouse y coord; see "peek / poke" tab
 stat(34) -- mouse button bitmask; see "peek / poke" tab</code></pre>
 
           <h6>javascript</h6>
-          <pre><code class="javascript">pico8_gpio[] // read and write gpio pins</code></pre>
+          <pre><code class="javascript">pico8_gpio[] // read and write gpio pins
+pico8_buttons[] // bitfields for player input</code></pre>
 
           <h6>private functions (use carefully)</h6>
           <pre><code class="lua">_get_frames_skipped() -- used automatically by _mainloop()
