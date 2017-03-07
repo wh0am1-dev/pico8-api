@@ -225,7 +225,8 @@ shl(x, y) -- shift left
 shr(x, y) -- shift right
 sin(x) -- x sine, [0..1]; inverted
 sqrt(x) -- x square root
-srand(x) -- set random seed</code></pre>
+srand(x) -- set random seed
+time() -- current time in seconds</code></pre>
 
           <h6>operators</h6>
           <pre><code class="lua">a = b -- assignment
@@ -271,9 +272,22 @@ while &lt;condition&gt; do
  -- while block
 end
 
+repeat
+ -- repeat block
+until &lt;condition&gt;
+
 for &lt;var&gt; = &lt;first&gt;, &lt;last&gt;, &lt;step&gt; do
  -- for block
-end</code></pre>
+end
+
+for &lt;var&gt; in all(&lt;array&gt;) do
+ -- for block
+end
+
+for &lt;key&gt;,&lt;value&gt; in pairs(&lt;table&gt;) do
+ -- for block
+end
+</code></pre>
         </div>
 
         <!-- MEMORY -->
