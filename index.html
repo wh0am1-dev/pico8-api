@@ -271,7 +271,19 @@ while &lt;condition&gt; do
  -- while block
 end
 
+repeat
+ -- repeat block
+until &lt;condition&gt;
+
 for &lt;var&gt; = &lt;first&gt;, &lt;last&gt;, &lt;step&gt; do
+ -- for block
+end
+
+for &lt;var&gt; in all(&lt;table&gt;) do
+ -- for block
+end
+
+for &lt;key&gt;, &lt;value&gt; in pairs(&lt;table&gt;) do
  -- for block
 end</code></pre>
         </div>
@@ -326,9 +338,9 @@ poke(0x5f2c, 7) -- mirror top-left quarter</code></pre>
 
           <h6>raspberry pi / pocketchip gpio</h6>
           <pre><code class="lua">-- run pico-8 as root ("sudo pico-8")
--- values in [0..255]
-poke(0x5f80, val) -- send val to gpio0
-poke(0x5f81, val) -- send val to gpio1
+-- 128 pin values in the range [0..255]
+poke(0x5f80, value) -- send value to gpio0
+peek(0x5f81) -- get value from gpio1
 -- et cetera</code></pre>
         </div>
 
@@ -386,7 +398,8 @@ stat(33) -- mouse y coord; see "peek / poke" tab
 stat(34) -- mouse button bitmask; see "peek / poke" tab</code></pre>
 
           <h6>javascript</h6>
-          <pre><code class="javascript">pico8_gpio[] // read and write gpio pins</code></pre>
+          <pre><code class="javascript">pico8_gpio[] // read and write gpio pins
+pico8_buttons[] // bitfields for player input</code></pre>
 
           <h6>private functions (use carefully)</h6>
           <pre><code class="lua">_get_frames_skipped() -- used automatically by _mainloop()
