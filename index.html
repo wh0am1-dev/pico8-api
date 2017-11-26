@@ -182,7 +182,18 @@ rectfill(x0, y0, x1, y1, [col]) -- draw filled rectangle
 sget(x, y) -- get spritesheet pixel colour
 spr(n, x, y, [w, h], [flip_x], [flip_y]) -- draw sprite
 sset(x, y, [col]) -- set spritesheet pixel colour
-sspr(sx, sy, sw, sh, dx, dy, [dw, dh], [flip_x], [flip_y]) -- draw texture from spritesheet</code></pre>
+sspr(sx, sy, sw, sh, dx, dy, [dw, dh], [flip_x], [flip_y]) -- draw texture from spritesheet
+fillp(mask) -- set fill pattern for circ, circfill, rect, rectfill, pset, and line</code></pre>
+          <h6>fillp() mask</h6>
+          <pre><code>.-----------------------.
+|32768|16384| 8192| 4096|
+|-----|-----|-----|-----|
+| 2048| 1024| 512 | 256 |
+|-----|-----|-----|-----|
+| 128 |  64 |  32 |  16 |
+|-----|-----|-----|-----|
+|  8  |  4  |  2  |  1  |
+'-----------------------'</code></pre>
         </div>
 
         <!-- INPUT -->
