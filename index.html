@@ -320,8 +320,10 @@ reload(dest_addr, src_addr, len, [filename]) -- copy bytes from rom to ram [load
 
         <!-- PEEK / POKE -->
         <div role="tabpanel" class="tab-pane fade" id="peekpoke">
-          <h6>mouse manipulation</h6>
-          <pre><code class="lua">poke(0x5f2d, 1) -- initiate mouse listener
+          <h6>devkit input mode</h6>
+          <pre><code class="lua">poke(0x5f2d, 1) -- enable devkit input mode
+stat(30) -- read keyboard had input (bool)
+stat(31) -- read keyboard character
 stat(32) -- read x coord
 stat(33) -- read y coord
 stat(34) -- read button bitmask; 1 = primary, 2 = secondary, 4 = middle</code></pre>
@@ -393,6 +395,8 @@ stat(1) -- cpu usage; 1.0 == 100% cpu at 30fps
 stat(4) -- clipboard; after user pressed ctrl-v
 stat([16..19]) -- index of playing sfx on channels [0..3]
 stat([20..23]) -- note number (0..31) on channels [0..3]
+stat(30) -- keyboard key hit; see "peek / poke" tab
+stat(31) -- keyboard character; see "peek / poke" tab
 stat(32) -- mouse x coord; see "peek / poke" tab
 stat(33) -- mouse y coord; see "peek / poke" tab
 stat(34) -- mouse button bitmask; see "peek / poke" tab</code></pre>
