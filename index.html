@@ -333,7 +333,8 @@ reload(dest_addr, src_addr, len, [filename]) -- copy bytes from rom to ram [load
         <div role="tabpanel" class="tab-pane fade" id="peekpoke">
           <h6>devkit input mode</h6>
           <pre><code class="lua">poke(0x5f2d, 1) -- enable devkit input mode
-stat(30) -- read keyboard had input (bool)
+stat(30) -- read keyboard had input (bool); repeats every 4 frames after key held 
+for 15 frames
 stat(31) -- read keyboard character
 stat(32) -- read x coord
 stat(33) -- read y coord
