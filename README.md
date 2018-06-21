@@ -1,6 +1,6 @@
 # PICO-8 API
 
-Official PICO-8 API with a lovely design !
+Unofficial PICO-8 API with a lovely design !
 
 ## What is PICO-8 ?
 
