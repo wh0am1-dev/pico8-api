@@ -244,12 +244,14 @@ a + b -- sum
 a - b -- sub
 a * b -- mul
 a / b -- div
+a \ b -- integer div
 a % b -- mod
 a ^ b -- pow
 a += b -- sum to
 a -= b -- sub to
 a *= b -- mul to
 a /= b -- div to
+a \= b -- integer div to
 a %= b -- mod to
 a ^= b -- pow to
 a == b -- compare equals
@@ -497,6 +499,9 @@ function mt.__mul(a, b) return a * b end
 
 -- division; returned by 'a / b'
 function mt.__div(a, b) return a / b end
+
+-- integer division; returned by 'a \ b'
+function mt.__idiv(a, b) return a \ b end
 
 -- modulo; returned by 'a % b'
 function mt.__mod(a, b) return a % b end
